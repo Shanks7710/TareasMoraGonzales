@@ -27,33 +27,56 @@ EE_ERROR_LONGITUD_EXCEDIDA = -900
 # ==============================
 
 def filtrar_vocales(cadena, bandera):
+    """
+    Filtra vocales o consonantes de una cadena según el valor
+    de la bandera.
 
-    # Verificar que cadena sea string
+    Parámetros:
+        cadena (str): Texto a analizar. Debe contener solo letras
+                      y tener máximo 30 caracteres.
+        bandera (bool): Si es True retorna solo vocales.
+                        Si es False retorna solo consonantes.
+
+    Retorna:
+        (int, str | None):
+            Código de estado y el string filtrado.
+            En caso de error retorna (código_error, None).
+    """
+
+    # Validar que cadena sea tipo string
     if not isinstance(cadena, str):
         return FV_ERROR_NO_STRING, None
 
-    # Verificar que cadena no sea vacía
+    # Validar que no sea cadena vacía
     if cadena == "":
         return FV_ERROR_CADENA_VACIA, None
 
-    # Verificar longitud máxima
+    # Validar longitud máxima permitida
     if len(cadena) > 30:
         return FV_ERROR_LONGITUD_EXCEDIDA, None
 
-    # Verificar que solo contenga letras
+    # Validar que solo contenga letras del abecedario
     if not cadena.isalpha():
         return FV_ERROR_NO_SOLO_LETRAS, None
 
-    # Verificar que bandera sea booleano
+    # Validar que bandera sea booleano
     if not isinstance(bandera, bool):
         return FV_ERROR_BANDERA_NO_BOOL, None
 
+    # Conjunto de vocales permitidas
     vocales = "aeiouAEIOU"
 
+    # Filtrado según el valor de bandera
     if bandera:
-        resultado = "".join(c for c in cadena if c in vocales)
+        resultado = "".join(
+            caracter for caracter in cadena
+            if caracter in vocales
+        )
     else:
-        resultado = "".join(c for c in cadena if c not in vocales)
+        resultado = "".join(
+            caracter for caracter in cadena
+            if caracter not in vocales
+        )
 
     return FV_OK, resultado
 
@@ -63,24 +86,38 @@ def filtrar_vocales(cadena, bandera):
 # ==============================
 
 def encontrar_extremos(lista_numeros):
+    """
+    Determina el valor mínimo y máximo de una lista numérica.
 
-    # Verificar que sea lista
+    Parámetros:
+        lista_numeros (list): Lista con números enteros o
+                              flotantes. Máximo 15 elementos.
+
+    Retorna:
+        (int, int|float|None, int|float|None):
+            Código de estado, valor mínimo y valor máximo.
+            En caso de error retorna (código_error, None, None).
+    """
+
+    # Validar que el parámetro sea una lista
     if not isinstance(lista_numeros, list):
         return EE_ERROR_NO_LISTA, None, None
 
-    # Verificar que no esté vacía
+    # Validar que la lista no esté vacía
     if len(lista_numeros) == 0:
         return EE_ERROR_LISTA_VACIA, None, None
 
-    # Verificar longitud máxima
+    # Validar que no exceda 15 elementos
     if len(lista_numeros) > 15:
         return EE_ERROR_LONGITUD_EXCEDIDA, None, None
 
-    # Verificar que todos sean números (pero NO aceptar bool)
+    # Validar que todos los elementos sean int o float
+    # Se usa type(...) is para excluir bool explícitamente
     for elemento in lista_numeros:
-        if not (type(elemento) == int or type(elemento) == float):
+        if type(elemento) is not int and type(elemento) is not float:
             return EE_ERROR_ELEMENTOS_NO_NUMERICOS, None, None
 
+    # Calcular valores extremos
     minimo = min(lista_numeros)
     maximo = max(lista_numeros)
 
